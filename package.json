@@ -16,7 +16,6 @@
   "dependencies": {
     "core-js": "^3.39.0",
     "fraction.js": "^5.3.4",
-    "img": "^3.0.3",
     "regenerator-runtime": "^0.14.1"
   }
 }
