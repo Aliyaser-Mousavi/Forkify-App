@@ -12,22 +12,26 @@ class AddRecipeView extends View {
 
   constructor() {
     super();
-    this._addHandlerShowWindow();
-    this._addHandlerHideWindow();
+    // Guard: only attach handlers if DOM elements were found
+    if (this._btnOpen) this._addHandlerShowWindow();
+    if (this._btnClose || this._overlay) this._addHandlerHideWindow();
   }
 
   toggleWindow() {
-    this._overlay.classList.toggle("hidden");
-    this._window.classList.toggle("hidden");
+    // Defensive: ensure nodes exist before toggling classes
+    if (this._overlay) this._overlay.classList.toggle("hidden");
+    if (this._window) this._window.classList.toggle("hidden");
   }
 
   _addHandlerShowWindow() {
+    if (!this._btnOpen) return; // defensive
     this._btnOpen.addEventListener("click", this.toggleWindow.bind(this));
   }
 
   _addHandlerHideWindow() {
-    this._btnClose.addEventListener("click", this.toggleWindow.bind(this));
-    this._overlay.addEventListener("click", this.toggleWindow.bind(this));
+    // Defensive: attach only to existing elements
+    if (this._btnClose) this._btnClose.addEventListener("click", this.toggleWindow.bind(this));
+    if (this._overlay) this._overlay.addEventListener("click", this.toggleWindow.bind(this));
   }
 
   addHandlerUpload(handler) {
