@@ -37,7 +37,7 @@ export const loadRecipe = async function (id) {
       state.recipe.bookmarked = true;
     else state.recipe.bookmarked = false;
 
-    console.log(state.recipe);
+    // Removed debugging console.log to avoid leaking state to production
   } catch (err) {
     // Temp error handling
     console.error(`${err} 💥💥💥💥`);
@@ -50,7 +50,7 @@ export const loadSearchResults = async function (query) {
     state.search.query = query;
 
     const data = await AJAX(`${API_URL}?search=${query}&key=${KEY}`);
-    console.log(data);
+    // Removed debugging console.log to avoid noisy logs in production
 
     state.search.results = data.data.recipes.map((rec) => {
       return {
@@ -103,7 +103,8 @@ export const addBookmark = function (recipe) {
 export const deleteBookmark = function (id) {
   // Delete bookmark
   const index = state.bookmarks.findIndex((el) => el.id === id);
-  state.bookmarks.splice(index, 1);
+  // Fix: ensure index is valid before splicing to avoid removing wrong item
+  if (index !== -1) state.bookmarks.splice(index, 1);
 
   // Mark current recipe as NOT bookmarked
   if (id === state.recipe.id) state.recipe.bookmarked = false;
@@ -118,7 +119,9 @@ const init = function () {
 init();
 
 const clearBookmarks = function () {
-  localStorage.clear("bookmarks");
+  // Fix: localStorage.clear() takes no arguments and would remove all keys.
+  // Use removeItem to only clear the bookmarks key.
+  localStorage.removeItem("bookmarks");
 };
 // clearBookmarks();
 
@@ -130,8 +133,9 @@ export const uploadRecipe = async function (newRecipe) {
         const ingArr = ing[1].split(",").map((el) => el.trim());
         // const ingArr = ing[1].replaceAll(' ', '').split(',');
         if (ingArr.length !== 3)
+          // Fix: typo in error message and make it clearer to the user
           throw new Error(
-            "Wrong ingredient fromat! Please use the correct format :)"
+            "Wrong ingredient format! Please use the correct format: 'quantity,unit,description'"
           );
 
         const [quantity, unit, description] = ingArr;

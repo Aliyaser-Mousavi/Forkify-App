@@ -40,7 +40,9 @@ export default class View {
       // Updates changed TEXT
       if (
         !newEl.isEqualNode(curEl) &&
-        newEl.firstChild?.nodeValue.trim() !== ''
+        // Fix: guard against undefined nodeValue by optional-chaining the nodeValue
+        // so calling trim() won't throw if nodeValue is undefined/null
+        newEl.firstChild?.nodeValue?.trim() !== ''
       ) {
         // console.log('💥', newEl.firstChild.nodeValue.trim());
         curEl.textContent = newEl.textContent;
