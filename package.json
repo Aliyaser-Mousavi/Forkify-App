@@ -1,0 +1,22 @@
+{
+  "name": "forkify",
+  "version": "1.0.0",
+  "description": "Recipe application",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html --dist-dir ./dist"
+  },
+  "author": "Aliyaser-Mousavi",
+  "license": "ISC",
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.16.3",
+    "parcel": "^2.16.3",
+    "sass": "^1.77.0"
+  },
+  "dependencies": {
+    "core-js": "^3.39.0",
+    "fraction.js": "^5.3.4",
+    "img": "^3.0.3",
+    "regenerator-runtime": "^0.14.1"
+  }
+}
