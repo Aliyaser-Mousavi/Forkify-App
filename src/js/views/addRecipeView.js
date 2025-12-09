@@ -1,5 +1,5 @@
 import View from "./View.js";
-// import icons from 'url:../../img/icons.svg'; // Parcel 2
+import icons from "url:../../img/icons.svg"; // Parcel 2
 
 class AddRecipeView extends View {
   _parentElement = document.querySelector(".upload");
@@ -30,8 +30,10 @@ class AddRecipeView extends View {
 
   _addHandlerHideWindow() {
     // Defensive: attach only to existing elements
-    if (this._btnClose) this._btnClose.addEventListener("click", this.toggleWindow.bind(this));
-    if (this._overlay) this._overlay.addEventListener("click", this.toggleWindow.bind(this));
+    if (this._btnClose)
+      this._btnClose.addEventListener("click", this.toggleWindow.bind(this));
+    if (this._overlay)
+      this._overlay.addEventListener("click", this.toggleWindow.bind(this));
   }
 
   addHandlerUpload(handler) {
