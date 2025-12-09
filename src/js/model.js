@@ -80,20 +80,34 @@ export const getSearchResultsPage = function (page = state.search.page) {
 };
 
 export const updateServings = function (newServings) {
+  // Defensive: ensure recipe and ingredients exist and servings is a valid number
+  if (!state.recipe || !Array.isArray(state.recipe.ingredients)) return;
+  const oldServings = Number(state.recipe.servings) || 1;
+  if (oldServings === 0) return;
+
   state.recipe.ingredients.forEach((ing) => {
-    ing.quantity = (ing.quantity * newServings) / state.recipe.servings;
-    // newQt = oldQt * newServings / oldServings // 2 * 8 / 4 = 4
+    if (ing.quantity != null)
+      ing.quantity = (ing.quantity * newServings) / oldServings;
   });
 
   state.recipe.servings = newServings;
 };
 
 const persistBookmarks = function () {
-  localStorage.setItem("bookmarks", JSON.stringify(state.bookmarks));
+  try {
+    localStorage.setItem("bookmarks", JSON.stringify(state.bookmarks));
+  } catch (err) {
+    // Storage may fail (e.g., quota). Fail silently but log during development.
+    // Do not throw to avoid breaking UI interactions.
+    // eslint-disable-next-line no-console
+    console.warn("Could not persist bookmarks to localStorage", err);
+  }
 };
 
 export const addBookmark = function (recipe) {
   // Add bookmark
+  // Prevent duplicates
+  if (state.bookmarks.some((b) => b.id === recipe.id)) return;
   state.bookmarks.push(recipe);
 
   // Mark current recipe as bookmarked
